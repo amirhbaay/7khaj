@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0d9488" />
+  <title>چهار برگ ۱۱</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div id="toastContainer" class="toast-container"></div>
+
+  <div class="app-shell">
+    <!-- Minimal Clean Top Header -->
+    <header class="top-bar">
+      <div class="score-pill-group" aria-label="امتیازات">
+        <div class="score-box us" title="امتیاز شما">
+          <span class="score-label">شما</span>
+          <strong id="scoreTeamUs" class="score-num">۰</strong>
+        </div>
+        <span id="roundBadgeText" class="round-chip">دست ۱/۶</span>
+        <div class="score-box them" title="امتیاز حریف">
+          <span class="score-label">حریف</span>
+          <strong id="scoreTeamThem" class="score-num">۰</strong>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <div class="mode-toggle" role="group" aria-label="تعداد بازیکن">
+          <button type="button" id="btnMode2P" class="mode-btn active">۲ نفره</button>
+          <button type="button" id="btnMode4P" class="mode-btn">۴ نفره</button>
+        </div>
+        <button type="button" id="btnPreviousHand" class="icon-btn" title="دست قبلی">
+          <span>⏮</span>
+          <span class="btn-text">دست قبلی</span>
+        </button>
+        <button type="button" id="btnThemeToggle" class="icon-btn" title="تغییر تم روشن / تیره">🌙</button>
+        <button type="button" id="btnAudioToggle" class="icon-btn" title="صدا">🔊</button>
+        <button type="button" id="btnNewMatch" class="icon-btn" title="بازی جدید">🔄</button>
+        <button type="button" id="btnInstallPWA" class="icon-btn" style="display:none;" title="نصب">📲</button>
+      </div>
+    </header>
+
+    <!-- Pure Interactive Felt Table -->
+    <main class="game-table">
+      <!-- Top Player (Opponent in 2P / Partner in 4P) -->
+      <div id="seatTopContainer" class="seat-slot seat-top"></div>
+
+      <!-- Left & Right Players (4P) + Center Cards -->
+      <div class="table-middle">
+        <div id="seatRightContainer" class="seat-slot seat-side hidden"></div>
+
+        <section class="center-board" aria-label="کارت‌های زمین">
+          <!-- Live Spotlight when a player plays a card -->
+          <div id="activePlayBanner" class="active-play-banner hidden"></div>
+
+          <div id="tableCardsContainer" class="board-cards"></div>
+
+          <div id="selectionBar" class="selection-bar hidden">
+            <span id="selectionSumText" class="selection-sum">جمع: ۱۱</span>
+            <button type="button" id="btnClearSelection" class="clear-sel-btn">پاک کردن انتخاب</button>
+          </div>
+        </section>
+
+        <div id="seatLeftContainer" class="seat-slot seat-side hidden"></div>
+      </div>
+
+      <!-- Live Strip showing what Opponent(s) played -->
+      <div id="opponentsMovesBar" class="opponents-moves-bar" aria-live="polite"></div>
+
+      <!-- Bottom Human Player Hand -->
+      <section id="humanSeatZone" class="human-zone" aria-label="دست شما">
+        <div class="human-meta-bar">
+          <div id="humanRoleBadge" class="human-status"></div>
+          <div id="humanRoundStats" class="human-counters"></div>
+        </div>
+        <div id="humanHandContainer" class="hand-fan"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL 1: Previous Hand ("دست قبلی") -->
+  <div id="modalPreviousHand" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title">دست قبلی</h2>
+        <button type="button" class="modal-close-btn" data-close-modal="modalPreviousHand" aria-label="بستن">✕</button>
+      </div>
+      <div id="previousHandModalBody" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Multi-Subset Capture Selector -->
+  <div id="modalCaptureSelector" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title">کدام برگ‌ها را با <span id="captureModalCardName"></span> برمی‌دارید؟</h2>
+        <button type="button" class="modal-close-btn" data-close-modal="modalCaptureSelector" aria-label="بستن">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="captureOptionsContainer" class="capture-options-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: Round / Match Scoreboard -->
+  <div id="modalRoundSummary" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="roundSummaryTitle" class="modal-title">نتیجه دست</h2>
+        <button type="button" class="modal-close-btn" data-close-modal="modalRoundSummary" aria-label="بستن">✕</button>
+      </div>
+      <div id="roundSummaryBody" class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" id="btnNextRoundAction" class="primary-action-btn">دست بعدی</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/lz.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
